@@ -47,7 +47,7 @@ const Details = () => {
         {showModal ? (
           <Modal onClose={handleModal}>
             <div>
-              <h1>Would you like to adopt {pet.name}?</h1>
+              <h2>Would you like to adopt {pet.name}?</h2>
               <div className="buttons">
                 <button
                   onClick={() => {

@@ -1,9 +1,11 @@
 import Pet from "./Pet";
 
-const Results = ({ pets }) => {
+const Results = ({ pets, isLoading }) => {
   return (
     <div className="search">
-      {!pets.length ? (
+      {isLoading ? (
+        <h1>Fetching Results</h1>
+      ) : !pets?.length ? (
         <h1>No Pets Found</h1>
       ) : (
         pets.map((pet) => {

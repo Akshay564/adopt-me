@@ -17,7 +17,7 @@ const SearchParams = () => {
   const [animal, setAnimal] = useState("");
   const [breeds] = useBreedList(animal);
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["search", requestParams],
     queryFn: fetchSearch,
   });
@@ -81,7 +81,7 @@ const SearchParams = () => {
         </label>
         <button>Submit</button>
       </form>
-      <Results pets={pets} />
+      <Results pets={pets} isLoading={isLoading} />
     </div>
   );
 };

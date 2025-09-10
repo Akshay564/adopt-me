@@ -3,14 +3,15 @@ import { useNavigate, useParams } from "react-router";
 import fetchPetDetails from "../api/fetchPetDetails";
 import Carousel from "./Carousel";
 import ErrorBoundary from "./ErrorBoundary";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import Modal from "./Modal";
-import AdoptedPetContext from "../context/AdoptedPetContext";
+import { useDispatch } from "react-redux";
+import { adopt } from "../adoptedPetSlice";
 
 const Details = () => {
   const navigate = useNavigate();
-  // eslint-disable-next-line no-unused-vars
-  const [_, setAdoptedPet] = useContext(AdoptedPetContext);
+  const dispatch = useDispatch();
+
   const [showModal, setShowModal] = useState(false);
   const { id } = useParams();
   const { isFetching, isError, data, error } = useQuery({
@@ -51,7 +52,7 @@ const Details = () => {
               <div className="buttons">
                 <button
                   onClick={() => {
-                    setAdoptedPet(pet);
+                    dispatch(adopt(pet));
                     navigate("/");
                   }}
                 >

@@ -5,6 +5,7 @@ import { QueryClient } from "@tanstack/query-core";
 import { QueryClientProvider } from "@tanstack/react-query";
 import AdoptedPetContext from "./context/AdoptedPetContext";
 import SearchParams from "./components/SearchParams";
+import { Pet } from "./api/ApiResponsesTypes";
 import Header from "./components/Header";
 
 const queryClient = new QueryClient({
@@ -19,7 +20,7 @@ const queryClient = new QueryClient({
 const Details = lazy(() => import("./components/Details"));
 
 const App = () => {
-  const adoptedPet = useState(null);
+  const adoptedPet = useState<Pet | null>(null);
 
   return (
     <BrowserRouter>
@@ -44,7 +45,12 @@ const App = () => {
   );
 };
 
-const container = document.getElementById("root");
+const container: HTMLElement | null = document.getElementById("root");
+
+if (!container) {
+  throw new Error("Root container not found");
+}
+
 const root = createRoot(container);
 root.render(
   <StrictMode>

@@ -1,6 +1,10 @@
 import React from "react";
 
-class Carousel extends React.Component {
+interface IProps {
+  images: string[];
+}
+
+class Carousel extends React.Component<IProps> {
   state = {
     active: 0,
   };

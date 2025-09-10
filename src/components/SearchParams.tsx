@@ -1,20 +1,30 @@
 import { useContext, useState } from "react";
-import useBreedList from "../customHooks/useBreedList";
 import Results from "./Results";
 import { useQuery } from "@tanstack/react-query";
-import fetchSearch from "../api/fetchSearch";
 import AdoptedPetContext from "../context/AdoptedPetContext";
+import { Animal } from "../api/ApiResponsesTypes";
+import useBreedList from "../customHooks/useBreedList";
+import fetchSearch from "../api/fetchSearch";
 
 const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
 
 const SearchParams = () => {
-  const [adoptedPet] = useContext(AdoptedPetContext);
+  const context = useContext(AdoptedPetContext);
+
+  if (!context) {
+    throw new Error(
+      "SomeComponent must be used within an AdoptedPetContext.Provider"
+    );
+  }
+
+  const [adoptedPet] = context;
+
   const [requestParams, setRequestParams] = useState({
     location: "",
-    animal: "",
+    animal: "" as Animal,
     breed: "",
   });
-  const [animal, setAnimal] = useState("");
+  const [animal, setAnimal] = useState("" as Animal);
   const [breeds] = useBreedList(animal);
 
   const { data } = useQuery({
@@ -24,12 +34,12 @@ const SearchParams = () => {
 
   const pets = data?.pets ?? [];
 
-  const updateParams = (e) => {
-    const formData = new FormData(e.target);
+  const updateParams = (e: React.FormEvent<HTMLFormElement>) => {
+    const formData = new FormData(e.currentTarget);
     const obj = {
-      animal: formData.get("animal") ?? "",
-      breed: formData.get("breed") ?? "",
-      location: formData.get("location") ?? "",
+      animal: (formData.get("animal")?.toString() as Animal) ?? "",
+      breed: formData.get("breed")?.toString() ?? "",
+      location: formData.get("location")?.toString() ?? "",
     };
     setRequestParams(obj);
   };
@@ -58,10 +68,10 @@ const SearchParams = () => {
             value={animal}
             name="animal"
             onChange={(e) => {
-              setAnimal(e.target.value);
+              setAnimal(e.target.value as Animal);
             }}
             onBlur={(e) => {
-              setAnimal(e.target.value);
+              setAnimal(e.target.value as Animal);
             }}
           >
             <option></option>

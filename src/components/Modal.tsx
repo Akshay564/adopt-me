@@ -1,19 +1,27 @@
-import { useEffect, useRef } from "react";
+import { MutableRefObject, ReactElement, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
-const Modal = ({ children, onClose }) => {
+const Modal = ({
+  children,
+  onClose,
+}: {
+  children: ReactElement;
+  onClose: () => void;
+}) => {
   const elRef = useRef(document.createElement("div"));
-  const modalContentRef = useRef(null);
+  const modalContentRef: MutableRefObject<HTMLDivElement | null> = useRef(null);
 
   useEffect(() => {
     const modalRoot = document.getElementById("modal");
+    if (!modalRoot || !elRef.current) {
+      return;
+    }
     const el = elRef.current;
-    modalRoot.appendChild(el);
 
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: MouseEvent) => {
       if (
         modalContentRef.current &&
-        !modalContentRef.current.contains(event.target)
+        !modalContentRef.current.contains(event.target as Node)
       ) {
         onClose();
       }

@@ -1,18 +1,30 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
-import fetchPetDetails from "../api/fetchPetDetails";
-import Carousel from "./Carousel";
-import ErrorBoundary from "./ErrorBoundary";
 import { useContext, useState } from "react";
 import Modal from "./Modal";
 import AdoptedPetContext from "../context/AdoptedPetContext";
+import fetchPetDetails from "../api/fetchPetDetails";
+import Carousel from "./Carousel";
+import ErrorBoundary from "./ErrorBoundary";
 
 const Details = () => {
   const navigate = useNavigate();
-  // eslint-disable-next-line no-unused-vars
-  const [_, setAdoptedPet] = useContext(AdoptedPetContext);
+  const context = useContext(AdoptedPetContext);
+
+  if (!context) {
+    throw new Error(
+      "SomeComponent must be used within an AdoptedPetContext.Provider"
+    );
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setAdoptedPet] = context;
+
   const [showModal, setShowModal] = useState(false);
   const { id } = useParams();
+  if (!id) {
+    throw new Error("ID isn't provided");
+  }
   const { isFetching, isError, data, error } = useQuery({
     queryKey: ["details", { petId: id }],
     queryFn: fetchPetDetails,
@@ -27,10 +39,16 @@ const Details = () => {
   }
 
   if (isError) {
-    return <span>Error: {error.message}</span>;
+    const errorMessage =
+      error instanceof Error ? error.message : "An unknown error occurred";
+    return <span>Error: {errorMessage}</span>;
   }
 
-  const pet = data.pets[0];
+  const pet = data?.pets[0];
+
+  if (!pet) {
+    throw new Error("No Pet");
+  }
 
   const handleModal = () => {
     setShowModal((prev) => !prev);

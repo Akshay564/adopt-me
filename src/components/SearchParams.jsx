@@ -1,19 +1,19 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import useBreedList from "../customHooks/useBreedList";
 import Results from "./Results";
 import { useQuery } from "@tanstack/react-query";
 import fetchSearch from "../api/fetchSearch";
-import AdoptedPetContext from "../context/AdoptedPetContext";
+import { useDispatch, useSelector } from "react-redux";
+import { all } from "../searchParamsSlice";
 
 const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
 
 const SearchParams = () => {
-  const [adoptedPet] = useContext(AdoptedPetContext);
-  const [requestParams, setRequestParams] = useState({
-    location: "",
-    animal: "",
-    breed: "",
-  });
+  const adoptedPet = useSelector((state) => state.adopt.value);
+  const requestParams = useSelector((state) => state.search.value);
+
+  const dispatch = useDispatch();
+
   const [animal, setAnimal] = useState("");
   const [breeds] = useBreedList(animal);
 
@@ -31,7 +31,7 @@ const SearchParams = () => {
       breed: formData.get("breed") ?? "",
       location: formData.get("location") ?? "",
     };
-    setRequestParams(obj);
+    dispatch(all(obj));
   };
 
   return (

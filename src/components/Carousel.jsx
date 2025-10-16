@@ -15,14 +15,23 @@ class Carousel extends React.Component {
 
     return (
       <div className="carousel">
-        <img src={images[active]} alt="animal"></img>
+        <img
+          src={
+            images[active]["medium"] ??
+            "http://pets-images.dev-apis.com/pets/none.jpg"
+          }
+          alt="animal"
+        ></img>
         <div className="carousel-smaller">
           {images.map((photo, index) => (
             // eslint-disable-next-line
             <img
               onClick={() => this.setState({ active: index })}
-              key={photo}
-              src={photo}
+              key={index}
+              src={
+                photo["medium"] ??
+                "http://pets-images.dev-apis.com/pets/none.jpg"
+              }
               className={index === active ? "active" : ""}
               alt="animal thumbnail"
             />

@@ -10,7 +10,12 @@ const Pet = ({ name, animal, breed, images, location, id }) => {
   return (
     <Link to={`/details/${id}`} className="pet">
       <div className="image-container">
-        <img src={hero} alt={name} />
+        <img
+          src={
+            hero["medium"] ?? "http://pets-images.dev-apis.com/pets/none.jpg"
+          }
+          alt={name}
+        />
       </div>
       <div className="info">
         <h1>{name}</h1>

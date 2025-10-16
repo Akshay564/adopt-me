@@ -4,30 +4,37 @@ import Results from "./Results";
 import { useQuery } from "@tanstack/react-query";
 import fetchSearch from "../api/fetchSearch";
 import AdoptedPetContext from "../context/AdoptedPetContext";
-
-const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
+import fetchAnimalTypes from "../api/fetchAnimalTypes";
 
 const SearchParams = () => {
   const [adoptedPet] = useContext(AdoptedPetContext);
   const [requestParams, setRequestParams] = useState({
     location: "",
-    animal: "",
+    type: "",
     breed: "",
   });
   const [animal, setAnimal] = useState("");
   const [breeds] = useBreedList(animal);
 
+  const { data: animalTypesData } = useQuery({
+    queryKey: ["animalTypes"],
+    queryFn: fetchAnimalTypes,
+  });
+
+  const animalTypes = animalTypesData?.types?.map((type) => type.name) ?? [];
+
   const { data, isLoading } = useQuery({
     queryKey: ["search", requestParams],
     queryFn: fetchSearch,
+    params: requestParams,
   });
 
-  const pets = data?.pets ?? [];
+  const pets = data?.animals ?? [];
 
   const updateParams = (e) => {
     const formData = new FormData(e.target);
     const obj = {
-      animal: formData.get("animal") ?? "",
+      type: formData.get("animal") ?? "",
       breed: formData.get("breed") ?? "",
       location: formData.get("location") ?? "",
     };
@@ -65,17 +72,17 @@ const SearchParams = () => {
             }}
           >
             <option></option>
-            {ANIMALS.map((animal) => (
-              <option key={animal}>{animal}</option>
+            {animalTypes.map((animal, index) => (
+              <option key={index}>{animal}</option>
             ))}
           </select>
         </label>
         <label htmlFor="breed">
           Breed
-          <select disabled={breeds.length === 0} id="breed" name="breed">
+          <select id="breed" name="breed">
             <option></option>
             {breeds.map((breed) => (
-              <option key={breed}>{breed}</option>
+              <option key={breed.name}>{breed.name}</option>
             ))}
           </select>
         </label>

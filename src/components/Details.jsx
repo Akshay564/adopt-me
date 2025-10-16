@@ -30,7 +30,7 @@ const Details = () => {
     return <span>Error: {error.message}</span>;
   }
 
-  const pet = data.pets[0];
+  const pet = data.animal;
 
   const handleModal = () => {
     setShowModal((prev) => !prev);
@@ -38,10 +38,10 @@ const Details = () => {
 
   return (
     <div className="details">
-      <Carousel images={pet.images} />
+      <Carousel images={pet.photos} />
       <div>
         <h1>{pet.name}</h1>
-        <h2>{`${pet.animal} — ${pet.breed} — ${pet.city}, ${pet.state}`}</h2>
+        <h2>{`${pet.type} — ${pet.breeds.primary} — ${pet.contact.address.city}, ${pet.contact.address.state}`}</h2>
         <button onClick={handleModal}>Adopt {pet.name}</button>
         <p>{pet.description}</p>
         {showModal ? (

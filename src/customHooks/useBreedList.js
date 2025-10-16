@@ -7,5 +7,5 @@ export default function useBreedList(animal) {
     queryFn: fetchBreedList,
   });
 
-  return [data?.breeds ?? [], status];
+  return [data ?? [], status];
 }

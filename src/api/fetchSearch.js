@@ -1,9 +1,15 @@
+import apiClient from "../services/apiClient";
+
 const fetchSearch = async ({ queryKey }) => {
-  const { animal, location, breed } = queryKey[1];
-  const res = await fetch(
-    `http://pets-v2.dev-apis.com/pets?animal=${animal}&location=${location}&breed=${breed}`
-  );
-  return await res.json();
+  const params = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(queryKey[1])) {
+    if (value) params.append(key, value);
+  }
+  const { data } = await apiClient.get(`/animals`, {
+    params,
+  });
+  return data;
 };
 
 export default fetchSearch;
